@@ -13,6 +13,7 @@ data['Crash_Date'] = pd.to_datetime(data['Crash_Date'], errors = 'coerce')
 data['YEAR'] = data['Crash_Date'].dt.year
 data['MONTH'] = data['Crash_Date'].dt.month_name()
 data['DAY_OF_WEEK'] = data['Crash_Date'].dt.day_name()
+data['HOUR'] = data['Crash_Date'].dt.hour
 
 #set page config
 st.set_page_config(page_title="Chicago Traffic Fatalities Dashboard", layout="wide")
@@ -48,3 +49,61 @@ if page == 'Overview':
     key2.metric(label="unique locations", value=filtered_data['Crash_Location'].nunique())
     key3.metric(label="years covered", value=f"{filtered_data['YEAR'].min()}-{filtered_data['YEAR'].max()}")
     st.markdown("---")
+
+elif page == 'Charts':
+    st.title("Visualisations")
+
+    #visualisations
+    #fatalities over time 
+    st.subheader("Monthly Fatalities")
+    st.caption("you can select full screen to see the graph clearer")
+    month_counts = (filtered_data['MONTH'].value_counts().reindex(calendar_months, fill_value=0)) #count fatalities per month
+    bar_chart, ax = plt.subplots(figsize=(10,5))
+    ax.bar(month_counts.index, month_counts.values, color='palevioletred')
+    ax.set_title("Number of Fatalities per Month")
+    ax.set_xlabel("Month")
+    ax.set_ylabel("Fatalities")
+    plt.xticks(rotation=45)
+    st.pyplot(bar_chart)
+    st.markdown("---")
+
+    #fig_time = px.histogram(filtered_data, x='MONTH', color='DAY_OF_WEEK', title='Fatalities by Month and Day of Week', category_orders={'MONTH': calendar_months})
+    #st.plotly_chart(fig_time, user_container_width=True) 
+
+    #crash victim breakdown in a pie chart
+    st.subheader("Crash Victim Breakdown")
+    if 'Victim' in filtered_data.columns:
+        fig_type = px.pie(filtered_data, names='Victim', title='Type of Victims')
+        st.plotly_chart(fig_type, use_container_width=True)
+    st.markdown("---")
+
+    #line chart
+    st.subheader("Monthly Fatalities by Year")
+    st.caption("interactive chart showing month, value and year")
+    monthly_by_year = (filtered_data.groupby(['YEAR','MONTH']).size().reset_index(name='Fatalities')) #group data
+    monthly_by_year['MONTH']=pd.Categorical(monthly_by_year['MONTH'], categories=calendar_months, ordered=True) #ensure month categorical order
+    monthly_by_year = monthly_by_year.sort_values(['MONTH', 'YEAR'])
+    pivot_df = monthly_by_year.pivot(index='MONTH', columns='YEAR',values='Fatalities') #pivot table for streamlit line chart
+    pivot_df = pivot_df.loc[calendar_months] #ensure row order
+    st.line_chart(pivot_df) #display line chart
+    st.markdown("---")
+
+    #area chart
+    st.subheader("Monthly Fatalities by Victim Type")
+    st.caption("interactive chart showing months, value and victim type")
+    monthly_victims = (filtered_data.groupby(['MONTH', 'Victim']).size().reset_index(name='Fatalities'))
+    monthly_victims['MONTH']=pd.Categorical(monthly_victims['MONTH'], categories=calendar_months, ordered=True)
+    area_df = monthly_victims.pivot(index='MONTH', columns='Victim', values='Fatalities')
+    area_df = area_df.loc[calendar_months]
+    st.area_chart(area_df)
+    st.markdown("---")
+
+    #altair chart
+    #year determined colour and N mean years is a nominal (categorical) variable
+    st.subheader("Crash Locations by Year")
+    st.caption("interactive chart showing latitude, longitude and year")
+    alt_data = filtered_data[['Latitude', 'Longitude', 'YEAR']]
+    alt_chart = alt.Chart(alt_data).mark_circle(size=60).encode(x='Longitude', y='Latitude', color='YEAR:N', tooltip=['Latitude', 'Longitude', 'YEAR']).properties(width=700, height=400).interactive()
+    st.altair_chart(alt_chart, use_container_width=True)
+    st.markdown("---")
+
