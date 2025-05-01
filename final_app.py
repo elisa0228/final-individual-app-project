@@ -28,3 +28,23 @@ month = st.sidebar.multiselect("Select Month", options=calendar_months, default=
 
 #filter data
 filtered_data = data[(data['YEAR'].isin(year)) & (data['MONTH'].isin(month))]
+
+#overview
+if page == 'Overview':
+    #title
+    st.title("\U0001F6A8 Chicago Traffic Fatalities (Vision Zero)")
+    
+    #map of chicago
+    st.subheader("Map of Chicago's Crash Locations")
+    map_data = filtered_data[['Longitude', 'Latitude']]
+    map_data = map_data.rename(columns={'Longitude':'lon', 'Latitude': 'lat'})
+    st.map(map_data)
+    st.markdown("---")
+
+    st.subheader("Key Statistics")
+    #keys (summary stats)
+    key1, key2, key3 = st.columns(3)
+    key1.metric(label="total fatalities", value=int(filtered_data.shape[0]))
+    key2.metric(label="unique locations", value=filtered_data['Crash_Location'].nunique())
+    key3.metric(label="years covered", value=f"{filtered_data['YEAR'].min()}-{filtered_data['YEAR'].max()}")
+    st.markdown("---")
