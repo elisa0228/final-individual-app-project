@@ -14,3 +14,17 @@ data['YEAR'] = data['Crash_Date'].dt.year
 data['MONTH'] = data['Crash_Date'].dt.month_name()
 data['DAY_OF_WEEK'] = data['Crash_Date'].dt.day_name()
 
+#set page config
+st.set_page_config(page_title="Chicago Traffic Fatalities Dashboard", layout="wide")
+
+calendar_months=['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+
+#sidebar filters
+page = st.sidebar.selectbox('Navigate to:',['Overview', 'Charts', 'Data Tables', 'Key Insights'])
+st.sidebar.header("Filter Data")
+year_options = sorted(data['YEAR'].unique())
+year = st.sidebar.multiselect("Select Year", options=year_options, default=year_options)
+month = st.sidebar.multiselect("Select Month", options=calendar_months, default=calendar_months)
+
+#filter data
+filtered_data = data[(data['YEAR'].isin(year)) & (data['MONTH'].isin(month))]
