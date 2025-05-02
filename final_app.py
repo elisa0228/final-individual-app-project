@@ -21,7 +21,7 @@ st.set_page_config(page_title="Chicago Traffic Fatalities Dashboard", layout="wi
 calendar_months=['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 
 #sidebar filters
-page = st.sidebar.selectbox('Navigate to:',['Overview', 'Charts', 'Data Tables', 'Key Insights']) #navigation between app sections
+page = st.sidebar.selectbox('Navigate to:',['Outline', 'Charts', 'Data Tables', 'Key Recap']) #navigation between app sections
 st.sidebar.header("Filter Data")
 year_options = sorted(data['YEAR'].unique()) #list available years from data
 year = st.sidebar.multiselect("Select Year", options=year_options, default=year_options) #multi-select year
@@ -30,8 +30,8 @@ month = st.sidebar.multiselect("Select Month", options=calendar_months, default=
 #filter data
 filtered_data = data[(data['YEAR'].isin(year)) & (data['MONTH'].isin(month))]
 
-#overview page
-if page == 'Overview':
+#outline page
+if page == 'Outline':
     #title
     st.title("\U0001F6A8 Chicago Traffic Fatalities (Vision Zero)")
     
@@ -143,9 +143,9 @@ elif page == 'Data Tables':
     common_hours['Hour'] = common_hours['Hour'].apply(lambda h: f"{h:02d}:00") #format hour from 0 to 00:00
     st.dataframe(common_hours, hide_index=True) #display hours table
 
-#key insights page
-elif page == 'Key Insights':
-    st.title("Key Insights from Chicago Traffic Fatality Data")
+#key recap page
+elif page == 'Key Recap':
+    st.title("Key Recap from Chicago Traffic Fatality Data")
     st.markdown("""
 ### Summary
  This analysis explores traffic crash fatalities in Chicago, supporting the city's Vision Zero initiative to eliminate traffic deaths by 2026. The insights presented are grounded in patterns observed through charts, maps, and statistics based on the cleaned dataset.
