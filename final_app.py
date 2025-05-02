@@ -107,3 +107,43 @@ elif page == 'Charts':
     st.altair_chart(alt_chart, use_container_width=True)
     st.markdown("---")
 
+#data tables
+elif page == 'Data Tables':
+    #title
+    st.title("Data Tables")
+
+    st.subheader("Top Victims in Order of Highest Fatality Rates")
+    top_victims = filtered_data['Victim'].value_counts().reset_index()
+    top_victims.columns = ['Victim Type', 'Fatalities']
+    top_victims.index = top_victims.index + 1
+    st.dataframe(top_victims)
+    st.markdown("---")
+
+    st.subheader("Top 5 Most Common Crash Locations via Street")
+    top_locations = filtered_data['Crash_Location'].value_counts().head(5).reset_index()
+    top_locations.columns = ['Location', 'Count']
+    top_locations.index = top_locations.index + 1
+    st.dataframe(top_locations)
+    st.markdown("---")
+
+    st.subheader("The Count of Fatalities per Month")
+    common_months = filtered_data['MONTH'].value_counts().reindex(calendar_months).reset_index()
+    common_months.columns = ['Month', 'Fatalities']
+    st.dataframe(common_months, hide_index=True)
+    st.markdown("---")
+
+    st.subheader("The Count of Fatalities per Year")
+    common_years = filtered_data['YEAR'].value_counts().sort_index().reset_index()
+    common_years.columns = ['Year', 'Fatalities']
+    st.dataframe(common_years, hide_index=True)
+    st.markdown("---")
+
+    st.subheader("The Count of Times for Fatalities")
+    st.caption("times on dataset are 12 hour this table is 24 hour")
+    common_hours = filtered_data['HOUR'].value_counts().sort_index().reset_index()
+    common_hours.columns = ['Hour', 'Fatalities']
+    common_hours['Hour'] = common_hours['Hour'].apply(lambda h: f"{h:02d}:00")
+    st.dataframe(common_hours, hide_index=True)
+
+elif page == 'Key Insights':
+    st.title("Key Insights")
