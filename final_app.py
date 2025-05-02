@@ -146,4 +146,34 @@ elif page == 'Data Tables':
     st.dataframe(common_hours, hide_index=True)
 
 elif page == 'Key Insights':
-    st.title("Key Insights")
+    st.title("Key Insights from Chicago Traffic Fatality Data")
+    st.markdown("""
+### Summary
+ This analysis explores traffic crash fatalities in Chicago, supporting the city's Vision Zero initiative to eliminate traffic deaths by 2026. The insights presented are grounded in patterns observed through charts, maps, and statistics based on the cleaned dataset.
+                
+### Victim Profiles
+- **PEDESTRIANS** represent the largest proportion of fatalities, followed by **DRIVERS** and **PASSENGERS**.
+- **SCOOTERS** account for the fewest fatalities but remain a vulnerabl group, ofen impacted in dense urban zones.
+               
+### Temporal Patterns
+- **JULY and SEPTEMBER** consistently record the **highest number of fatalities**, suggesting seasonal influenced such as increased traffic, events, and longer daylight hours.
+- Fatalities are also high in **OCTOBER**, possibly linked to changing light conditions and weather.
+- The most dangerous **time of day** are typically **late evening to early morning hours (7pm to 2am)**
+                
+### Spatial Distribution
+- Crashed cluster in  major arterial roads and intersections.
+- **Top 5 crash hotspots** include well-known high risk corridors in the city where visibility, volumne, or speed contribute to fatal outcomes.
+                
+### Yearly Trends
+- While fluctuations occur year to year, recent years such as **2020 and 2021** show significant numbers despite lower traffic volume due to the pandemic - possibly due to increased speeding on emptier roads.
+- Fatalities are also high in **2022**, most likely linked to the recovery of the pandemic as more people or going on holidays and outings and shopping.
+- Long-term trends show the importance of consistent enforcement and infrastructure improvements.
+                
+### Policy Implications
+- Infrastructure upgrades such as traffic calming, protected bike lanes, and safer pedestrian crossings could address high-risk zones.
+- Targeted enforcement during high-fatality time windows could reduce dangerous behaviour.
+- Public awareness campaigns should focus on both drivers and vulnerable road users during peak months.
+
+### Conclusion
+The data shows clear, actionabble trends. Most fatalities follow patterns in time, location, and behaviour. these patterns provide crucial direction for Chicago's Vision Zero strategy. By focusing on the most impacted victim groups, times, and locations, the city can make meaningful progress toward its goal of eliminating traffic deaths entirely.
+                """)
